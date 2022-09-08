@@ -29,11 +29,13 @@ class Tree:
         if self.root == self.null:
             new_element.red = False
             self.root = new_element
+            self.balance_tree(new_element)
             return new_element
 
         elif key < current.key:
             if current.left == self.null:
                 current.left = new_element
+                self.balance_tree(new_element)
                 return new_element
             else:
                 current = current.left
@@ -42,6 +44,7 @@ class Tree:
         elif key > current.key:
             if current.right == self.null:
                 current.right = new_element
+                self.balance_tree(new_element)
                 return current.right
             else:
                 current = current.right
@@ -85,11 +88,8 @@ class Tree:
                 node.left = right_child  # make right element of new parent as left element of node
             new_parent.right = node  # make node as right element of new parent
 
-    def balance_tree(self):
-        pass
-
     # actual insertion case 1
-    def color_question(self, node):
+    def balance_tree(self, node):
         parent = self.find_parent(node.key)
 
         if parent is None:
@@ -101,7 +101,7 @@ class Tree:
     def case_2(self, node):
         parent = self.find_parent(node.key)
         if not parent.red:
-            return
+            return None
         else:
             self.red_conflict(node)
 
@@ -115,7 +115,7 @@ class Tree:
             parent.red = False
             uncle.red = False
             grandparent.red = True
-            self.color_question(grandparent)
+            self.balance_tree(grandparent)
         else:
             self.case_4(node)
 
@@ -125,6 +125,21 @@ class Tree:
 
         if node is parent.right and parent is grandparent.left:
             self.rotate_left(parent)
+        elif node is parent.left and parent is grandparent.right:
+            self.rotate_right(parent)
+        self.case_5(node)
+
+    def case_5(self, node):
+        parent = self.find_parent(node.key)
+        grandparent = self.find_grandparent(node.key)
+
+        parent.red = False
+        grandparent.red = True
+
+        if node is parent.left and parent is grandparent.left:
+            self.rotate_right(grandparent)
+        else:
+            self.rotate_left(grandparent)
 
     def find_uncle(self, node):
         grandparent = self.find_grandparent(node.key)
@@ -178,12 +193,6 @@ if __name__ == '__main__':
 
     tree.insert_element(10)
     tree.insert_element(15)
-    node7 = tree.insert_element(7)
-    node8 = tree.insert_element(8)
-    node5 = tree.insert_element(5)
-    node6 = tree.insert_element(6)
-    tree.insert_element(2)
-
-    print(tree.find_parent(node6))
+    tree.insert_element(17)
 
     # inorder(tree.root)
