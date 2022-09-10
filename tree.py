@@ -52,6 +52,7 @@ class Tree:
 
     # insert parent
     def rotate_left(self, node):
+        print("rotate left")
         # node parent element of rotation
         if node.right != self.null:
             new_parent = node.right             # element to exchange with
@@ -65,9 +66,7 @@ class Tree:
                 elif node_parent.right == node:
                     node_parent.right = new_parent
 
-            if new_parent.left != self.null:
-                left_child = new_parent.left    # left child of element to exchange with
-                node.right = left_child         # make left element of new parent as right element of node
+            node.right = new_parent.left        # make left element of new parent as right element of node
             new_parent.left = node              # make node as left element of new parent
 
     def rotate_right(self, node):
@@ -83,9 +82,7 @@ class Tree:
                 elif node_parent.right == node:
                     node_parent.right = new_parent
 
-            if new_parent.right != self.null:
-                right_child = new_parent.right  # right child of element to exchange with
-                node.left = right_child  # make right element of new parent as left element of node
+            node.left = new_parent.right  # make right element of new parent as left element of node
             new_parent.right = node  # make node as right element of new parent
 
     # actual insertion case 1
@@ -180,19 +177,22 @@ class Tree:
         grandparent = self.find_parent(parent.key)
         return grandparent
 
+    def print_tree(self, node=None):
+        if node is None:
+            node = self.root
+        if node.left is not None:
+            self.print_tree(node.left)
 
-def inorder(node):
-    if node:
-        inorder(node.left)
-        print(node.key, '  ', node.red)
-        inorder(node.right)
+        print(node.key, '      red:', node.red),
+        if node.right is not None:
+            self.print_tree(node.right)
 
 
 if __name__ == '__main__':
     tree = Tree()
 
-    tree.insert_element(10)
+    node10 = tree.insert_element(10)
     tree.insert_element(15)
     tree.insert_element(17)
 
-    # inorder(tree.root)
+    tree.print_tree()
